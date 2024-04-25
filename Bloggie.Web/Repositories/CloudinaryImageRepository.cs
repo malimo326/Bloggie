@@ -4,11 +4,11 @@ using CloudinaryDotNet.Actions;
 
 namespace Bloggie.Web.Repositories
 {
-    public class ClloudinaryImageRepository : IImageRepository
+    public class CloudinaryImageRepository : IImageRepository
     {
         private readonly IConfiguration configuration;
         private readonly Account account;
-        public ClloudinaryImageRepository(IConfiguration configuration)
+        public CloudinaryImageRepository(IConfiguration configuration)
         {
             this.configuration = configuration;
             account = new Account(
