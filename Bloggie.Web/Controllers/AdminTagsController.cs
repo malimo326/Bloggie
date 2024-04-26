@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace Bloggie.Web.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class AdminTagsController : Controller
     {
         private readonly ITagRepository tagRepository;
@@ -18,7 +19,7 @@ namespace Bloggie.Web.Controllers
             this.tagRepository = tagRepository;
         }
 
-        [Authorize]
+
         [HttpGet]
         public IActionResult Add()
         {
@@ -38,7 +39,6 @@ namespace Bloggie.Web.Controllers
             await tagRepository.AddAsync(tag);
             return RedirectToAction("List");
         }
-
 
 
         [HttpGet]
@@ -71,6 +71,7 @@ namespace Bloggie.Web.Controllers
             }
             return View(null);
         }
+
         [HttpPost]
         public async  Task<IActionResult> Edit(EditTagRequest editTagRequest)
         {
@@ -94,6 +95,7 @@ namespace Bloggie.Web.Controllers
             return RedirectToAction("Edit", new { id = editTagRequest.Id });
         }
 
+
         [HttpPost]
         public async Task<IActionResult> Delete(EditTagRequest editTagRequest)
         {
@@ -104,5 +106,6 @@ namespace Bloggie.Web.Controllers
             }
             return RedirectToAction("Edit", new {id = editTagRequest.Id});
         }
+      
     }
 }

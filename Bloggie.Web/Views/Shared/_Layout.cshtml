@@ -28,33 +28,38 @@
                         <li class="nav-item">
                             <a class="nav-link text-light" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                Admin
-                            </a>
-                            <ul class="dropdown-menu">
-                                <li>
-                                    <a class="dropdown-item" asp-area="" asp-controller="AdminTags"
-                                       asp-action="Add">Add Tag</a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item" asp-area="" asp-controller="AdminTags"
-                                       asp-action="List">Show all Tags</a>
-                                </li>
 
-                                <li>
-                                    <a class="dropdown-item" asp-area="" asp-controller="AdminBlogPost"
-                                       asp-action="Add">Add Blog Post</a>
-                                </li>
+                        @if (signInManager.IsSignedIn(User) && User.IsInRole("Admin"))
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Admin
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <a class="dropdown-item" asp-area="" asp-controller="AdminTags"
+                                           asp-action="Add">Add Tag</a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" asp-area="" asp-controller="AdminTags"
+                                           asp-action="List">Show all Tags</a>
+                                    </li>
 
-                                <li>
-                                    <a class="dropdown-item" asp-area="" asp-controller="AdminBlogPost"
-                                       asp-action="List">All Blog Post</a>
-                                </li>
+                                    <li>
+                                        <a class="dropdown-item" asp-area="" asp-controller="AdminBlogPost"
+                                           asp-action="Add">Add Blog Post</a>
+                                    </li>
 
-                            </ul>
+                                    <li>
+                                        <a class="dropdown-item" asp-area="" asp-controller="AdminBlogPost"
+                                           asp-action="List">All Blog Post</a>
+                                    </li>
 
-                        </li>
+                                </ul>
+
+                            </li>
+                        }
+                       
 
 
                     </ul>
@@ -79,7 +84,7 @@
                                asp-area="" asp-controller="Account"
                                asp-action="Register">Register</a>
                         }
-                       
+
 
                     </div>
                 </div>
