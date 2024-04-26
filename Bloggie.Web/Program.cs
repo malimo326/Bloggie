@@ -3,6 +3,7 @@ using Bloggie.Web.Repositories;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using System.Runtime.Intrinsics.X86;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,6 +17,19 @@ options.UseSqlServer(builder.Configuration.GetConnectionString("BloggieAuthDbCon
 
 builder.Services.AddIdentity<IdentityUser, IdentityRole>()
     .AddEntityFrameworkStores<AuthDbContext>();
+
+builder.Services.Configure<IdentityOptions>(options =>
+{
+    // Default settings
+    options.Password.RequireDigit = true;
+    options.Password.RequireLowercase = true;
+    options.Password.RequireUppercase = true;
+    options.Password.RequireNonAlphanumeric = false;
+    options.Password.RequiredLength = 6;
+    options.Password.RequiredUniqueChars = 0;
+
+});
+
 
 
 builder.Services.AddScoped<ITagRepository, TagRepository>();

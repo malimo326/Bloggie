@@ -2,6 +2,7 @@
 using Bloggie.Web.Models.Domain;
 using Bloggie.Web.Models.viewModles;
 using Bloggie.Web.Repositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
@@ -17,6 +18,7 @@ namespace Bloggie.Web.Controllers
             this.tagRepository = tagRepository;
         }
 
+        [Authorize]
         [HttpGet]
         public IActionResult Add()
         {
