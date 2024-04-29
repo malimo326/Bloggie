@@ -1,4 +1,4 @@
-﻿@model Bloggie.Web.Models.Domain.BlogPost
+﻿@model Bloggie.Web.Models.viewModles.BlogDetailsViewModel
 @{
     ViewData["Title"] = Model.PageTitle;
 }
@@ -10,8 +10,14 @@
             {
                 <h1 class="mb-3">@Model.Heading</h1>
                 <div class="d-flex justify-content-between mb-3">
+                    <span class="text-secondary">@Model.Author</span>
                     <span class="text-secondary">@Model.PublishedDate.ToShortDateString()</span>
                 </div>
+
+                <div class="mb-3">
+                   <span>@Model.TotalLikes</span> Likes
+                </div>
+
                 <div class="mb-3 d-flex">
                     @foreach (var tag in Model.Tags)
                     {
