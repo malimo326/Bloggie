@@ -1,5 +1,6 @@
 ﻿using Bloggie.Web.Models.viewModles;
 using Bloggie.Web.Repositories;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Bloggie.Web.Controllers
@@ -8,16 +9,23 @@ namespace Bloggie.Web.Controllers
     {
         private readonly IBlogPostRepository blogPostRepository;
         private readonly IBlogPostLikeRepository blogPostLikeRepository;
+        private readonly SignInManager<IdentityUser> signInManager;
+        private readonly UserManager<IdentityUser> userManager;
 
         public BlogsController(IBlogPostRepository blogPostRepository,
-            IBlogPostLikeRepository blogPostLikeRepository)
+            IBlogPostLikeRepository blogPostLikeRepository,
+            SignInManager<IdentityUser> signInManager,
+            UserManager<IdentityUser> userManager)
         {
             this.blogPostRepository = blogPostRepository;
             this.blogPostLikeRepository = blogPostLikeRepository;
+            this.signInManager = signInManager;
+            this.userManager = userManager;
         }
         [HttpGet]
         public async Task<IActionResult> Index(string urlHandle)
         {
+            var liked = false;
             var blogPost = await blogPostRepository.GetByUrlHandle(urlHandle);
             var blogDetailsViewModel = new BlogDetailsViewModel();
 
@@ -29,7 +37,19 @@ namespace Bloggie.Web.Controllers
 
                 var totalLiikes = await blogPostLikeRepository.GetTotalLikes(blogPost.Id);
 
-                 blogDetailsViewModel = new BlogDetailsViewModel
+                if (signInManager.IsSignedIn(User))
+                {
+                    // Get Like for this blog this user
+                    var likesForBlog = await blogPostLikeRepository.GetLikesForBlog(blogPost.Id);
+                    var userId = userManager.GetUserId(User);
+                    if (userId != null)
+                    {
+                        var likeFromUser = likesForBlog.FirstOrDefault(x => x.UserId == Guid.Parse(userId));
+                        liked = likeFromUser != null;
+                    }
+                }
+
+                blogDetailsViewModel = new BlogDetailsViewModel
                 {
                     Id = blogPost.Id,
                     Content = blogPost.Content,
@@ -42,7 +62,8 @@ namespace Bloggie.Web.Controllers
                     UrlHandle = blogPost.UrlHandle,
                     Visible = blogPost.Visible,
                     Tags = blogPost.Tags,
-                    TotalLikes = totalLiikes
+                    TotalLikes = totalLiikes,
+                    Liked   = liked
 
                 };
             }
