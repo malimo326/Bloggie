@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Bloggie.Web.Controllers
 {
-    [Authorize(Roles ="Admin")]
+    [Authorize(Roles = "Admin")]
     public class AdminUsersController : Controller
     {
         private readonly IUserRepository userRepository;
@@ -47,14 +47,14 @@ namespace Bloggie.Web.Controllers
                 UserName = request.Username,
                 Email = request.Email,
             };
-           var identityResult = await userManager.CreateAsync(identitYUser, request.Password);
+            var identityResult = await userManager.CreateAsync(identitYUser, request.Password);
 
-               if (identityResult is not null)
+            if (identityResult is not null)
             {
                 if (identityResult.Succeeded)
                 {
                     // assign rolew to this user
-                    var roles = new List<string> {"User" };
+                    var roles = new List<string> { "User" };
                     if (request.AdminRoleCheckbox)
                     {
                         roles.Add("Admin");
@@ -65,6 +65,23 @@ namespace Bloggie.Web.Controllers
                     {
                         return RedirectToAction("List", "AdminUsers");
                     }
+                }
+            }
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Delete(Guid id)
+        {
+
+            var user = await userManager.FindByIdAsync(id.ToString());
+
+            if (user != null)
+            {
+                var identityResult = await userManager.DeleteAsync(user);
+                if (identityResult is not null && identityResult.Succeeded)
+                {
+                    return RedirectToAction("List", "AdminUsers");
                 }
             }
             return View();
