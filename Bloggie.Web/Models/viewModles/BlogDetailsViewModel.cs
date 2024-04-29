@@ -19,5 +19,6 @@ namespace Bloggie.Web.Models.viewModles
         public int TotalLikes { get; set; }
         public bool Liked { get; set; }
         public string commentDescription { get; set; }
+        public IEnumerable<BlogComment> Comments { get; set; }
     }
 }

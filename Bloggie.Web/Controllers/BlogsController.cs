@@ -52,6 +52,20 @@ namespace Bloggie.Web.Controllers
                         liked = likeFromUser != null;
                     }
                 }
+                // Get Comment from Blog Post
+                var blogCommentsDomainModel = await blogPostComment.GetCommentsByBlogIdAsync(blogPost.Id);
+
+                var blogCommentsForView = new List<BlogComment>();
+
+                foreach (var blogComment in blogCommentsDomainModel)
+                {
+                    blogCommentsForView.Add(new BlogComment
+                    {
+                        Description = blogComment.Description,
+                        DateTime = blogComment.DateAdded,
+                        Username = (await userManager.FindByIdAsync(blogComment.UserId.ToString())).UserName,
+                    });
+                }
 
                 blogDetailsViewModel = new BlogDetailsViewModel
                 {
@@ -67,7 +81,8 @@ namespace Bloggie.Web.Controllers
                     Visible = blogPost.Visible,
                     Tags = blogPost.Tags,
                     TotalLikes = totalLiikes,
-                    Liked = liked
+                    Liked = liked,
+                    Comments = blogCommentsForView
 
                 };
             }
@@ -89,7 +104,7 @@ namespace Bloggie.Web.Controllers
                 };
 
                 await blogPostComment.AddAsync(domainModel);
-                return RedirectToAction("Index", "Home",
+                return RedirectToAction("Index", "Blogs",
                     new { urlHandle = blogDetailsViewModel.UrlHandle });
             }
             return View();
