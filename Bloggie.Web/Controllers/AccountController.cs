@@ -57,6 +57,7 @@ namespace Bloggie.Web.Controllers
         [HttpGet]
         public IActionResult Login(string ReturnUrl)
         {
+           
             var model = new LoginViewModel
             { ReturnUrl = ReturnUrl };
             return View(model);
@@ -64,6 +65,10 @@ namespace Bloggie.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> Login(LoginViewModel loginViewModel)
         {
+            if (!ModelState.IsValid)
+            {
+                return View();
+            }
             var signInResult = await signInManager.PasswordSignInAsync(loginViewModel.Username,
                 loginViewModel.Password, false, false);
             if (signInResult.Succeeded)
