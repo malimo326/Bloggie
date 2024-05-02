@@ -12,21 +12,34 @@
     </div>
 </div>
 
+<form method="get"
+      asp-controller="AdminTags" ,
+      asp-action="List">
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col col-md-3 d-flex">
+                <input type="text" class="form-control"
+                       name="searchQuery" value="@ViewBag.SearchQuery" />
+                <button type="submit" class="btn btn-warning ms-3">Search</button>
+            </div>
+        </div>
+    </div>
+</form>
 
 <div class="container py-5">
     @if (Model != null && Model.Any())
     {
-       <table class="table">
-           <thead>
-               <tr>
-                   <th>Id</th>
-                   <th>Name</th>
-                   <th>Display Name</th>
-                   <th></th>
-               </tr>
-           </thead>
-           <tbody>
-               @foreach (var tag in Model)
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Name</th>
+                    <th>Display Name</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var tag in Model)
                 {
                     <tr>
                         <th>@tag.Id</th>
@@ -34,12 +47,12 @@
                         <th>@tag.DisplayName</th>
                         <td>
                             <a asp-area="" asp-controller="AdminTags"
-                            asp-action="Edit" asp-route-id="@tag.Id">Edit</a>
+                               asp-action="Edit" asp-route-id="@tag.Id">Edit</a>
                         </td>
                     </tr>
                 }
             </tbody>
-       </table>
+        </table>
     }
     else
     {

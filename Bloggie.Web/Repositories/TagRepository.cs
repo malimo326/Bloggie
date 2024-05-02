@@ -28,26 +28,36 @@ namespace Bloggie.Web.Repositories
             if (existingTag != null)
             {
                 bloggieDbContext.Tags.Remove(existingTag);
-                await bloggieDbContext.SaveChangesAsync();  
+                await bloggieDbContext.SaveChangesAsync();
                 return existingTag;
             }
             return null;
         }
 
-        public async Task<IEnumerable<Tag>> GetAllAsync()
+        public async Task<IEnumerable<Tag>> GetAllAsync(string? searchQuery)
         {
-          return await bloggieDbContext.Tags.ToListAsync();
+            var query = bloggieDbContext.Tags.AsQueryable();
+            // Filtering
+            if (string.IsNullOrWhiteSpace(searchQuery) == false)
+            {
+                query = query.Where(x => x.Name.Contains(searchQuery) ||
+                x.DisplayName.Contains(searchQuery));
+            }
+            // Sorting
+            // Pagination
+            return await query.ToListAsync();
+            //return await bloggieDbContext.Tags.ToListAsync();
         }
 
         public Task<Tag?> GetAsync(Guid id)
         {
-           return bloggieDbContext.Tags.FirstOrDefaultAsync(x => x.Id == id);
+            return bloggieDbContext.Tags.FirstOrDefaultAsync(x => x.Id == id);
         }
 
         public async Task<Tag?> UpdateAsync(Tag tag)
         {
-          var existingTag =   await bloggieDbContext.Tags.FindAsync(tag.Id);
-            if(existingTag != null)
+            var existingTag = await bloggieDbContext.Tags.FindAsync(tag.Id);
+            if (existingTag != null)
             {
                 existingTag.Name = tag.Name;
                 existingTag.DisplayName = tag.DisplayName;
