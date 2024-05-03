@@ -23,6 +23,11 @@ namespace Bloggie.Web.Repositories
             return tag;
         }
 
+        public async Task<int> CountAsync()
+        {
+           return await bloggieDbContext.Tags.CountAsync();
+        }
+
         public async Task<Tag?> DeleteAsync(Guid id)
         {
             var existingTag = await bloggieDbContext.Tags.FindAsync(id);
@@ -38,7 +43,9 @@ namespace Bloggie.Web.Repositories
         public async Task<IEnumerable<Tag>> GetAllAsync(
             string? searchQuery,
             string? sortBy,
-            string? sortDirection)
+            string? sortDirection,
+            int pageNumber = 1,
+            int pageSize =100)
         {
             var query = bloggieDbContext.Tags.AsQueryable();
             // Filtering
@@ -65,6 +72,12 @@ namespace Bloggie.Web.Repositories
 
 
             // Pagination
+            // skip 0 take 5 -> Page 1 of 5 results
+            // skip 5 Take next 5 -> page 2of 5 results
+            var skipResults = (pageNumber -1) * pageSize;
+            query = query.Skip(skipResults).Take(pageSize);
+
+
             return await query.ToListAsync();
             //return await bloggieDbContext.Tags.ToListAsync();
         }
