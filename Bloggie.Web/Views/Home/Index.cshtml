@@ -36,40 +36,86 @@
 
 </div>
 
+<style>
+    .blog-post {
+        transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+        .blog-post:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .blog-post img {
+            border-radius: 8px;
+            max-height: 200px;
+            object-fit: cover;
+        }
+
+        .blog-post h2 {
+            color: #333;
+            font-size: 1.5rem;
+        }
+
+        .blog-post p {
+            color: #555;
+        }
+
+        .blog-post .badge {
+            font-size: 0.8rem;
+        }
+
+        .blog-post .btn-dark {
+            background-color: #333;
+            border-color: #333;
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+
+            .blog-post .btn-dark:hover {
+                background-color: #555;
+                border-color: #555;
+            }
+</style>
+
 <div class="container">
     <div class="row justify-content-center">
-        <div class="col-6">
-            @if (Model != null && Model.blogPosts.Any())
-            {
-                foreach (var blogPost in Model.blogPosts)
+        <div class="col-12">
+            <div class="row">
+                @if (Model != null && Model.blogPosts.Any())
                 {
-                   <div class="mb-5 bg-light box-shadow p-5">
-                       <img src="@blogPost.FeaturedImageUrl"
-                       alt="@blogPost.Heading" class="mb-2 d-block img-fluid"/>
-                       <h2 class="mb-4">@blogPost.Heading</h2>
-                       <p class="mb-4">
-                           Author: @blogPost.Author<br />
-                           Published Date: @blogPost.PublishedDate.ToShortDateString()
-                       </p>
-                       <p class="mb-4">
-                            @foreach (var tag in blogPost.Tags)
-                            {
-                                <span class="badge bg-secondary me-1">@tag.Name</span>
-                            }
-                       </p>
-                       <p class="mb-5">@blogPost.ShortDescription</p>
-                       <a class="btn btn-dark" 
-                       asp-area=""
-                       asp-controller="Blogs"
-                       asp-action="Index"
-                       asp-route-urlHandle="@blogPost.UrlHandle">Read More</a>
-
-                   </div>
+                    foreach (var blogPost in Model.blogPosts)
+                    {
+                        <div class="col-md-4 mb-4">
+                            <div class="bg-light box-shadow p-5 blog-post">
+                                <img src="@blogPost.FeaturedImageUrl"
+                                     alt="@blogPost.Heading" class="mb-2 d-block img-fluid" />
+                                <h2 class="mb-4">@blogPost.Heading</h2>
+                                <p class="mb-4">
+                                    Author: @blogPost.Author<br />
+                                    Published Date: @blogPost.PublishedDate.ToShortDateString()
+                                </p>
+                                <p class="mb-4">
+                                    @foreach (var tag in blogPost.Tags)
+                                    {
+                                        <span class="badge bg-secondary me-1">@tag.Name</span>
+                                    }
+                                </p>
+                                <p class="mb-5">@blogPost.ShortDescription</p>
+                                <a class="btn btn-dark"
+                                   asp-area=""
+                                   asp-controller="Blogs"
+                                   asp-action="Index"
+                                   asp-route-urlHandle="@blogPost.UrlHandle">Read More</a>
+                            </div>
+                        </div>
+                    }
                 }
-            }
-
+            </div>
         </div>
-
     </div>
-
 </div>
+
+
+
+
+

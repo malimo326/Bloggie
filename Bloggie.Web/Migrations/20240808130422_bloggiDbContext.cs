@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Bloggie.Web.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialMigration : Migration
+    public partial class bloggiDbContext : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -45,6 +45,46 @@ namespace Bloggie.Web.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "blogPostComment",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    BlogPostId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    DateAdded = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_blogPostComment", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_blogPostComment_BlogPosts_BlogPostId",
+                        column: x => x.BlogPostId,
+                        principalTable: "BlogPosts",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "blogPostLikes",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    BlogPostId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_blogPostLikes", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_blogPostLikes_BlogPosts_BlogPostId",
+                        column: x => x.BlogPostId,
+                        principalTable: "BlogPosts",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "BlogPostTag",
                 columns: table => new
                 {
@@ -69,6 +109,16 @@ namespace Bloggie.Web.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_blogPostComment_BlogPostId",
+                table: "blogPostComment",
+                column: "BlogPostId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_blogPostLikes_BlogPostId",
+                table: "blogPostLikes",
+                column: "BlogPostId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_BlogPostTag_TagsId",
                 table: "BlogPostTag",
                 column: "TagsId");
@@ -77,6 +127,12 @@ namespace Bloggie.Web.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "blogPostComment");
+
+            migrationBuilder.DropTable(
+                name: "blogPostLikes");
+
             migrationBuilder.DropTable(
                 name: "BlogPostTag");
 
